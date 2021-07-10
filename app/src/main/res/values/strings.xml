@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Movie List</string>
+    <string name="tab_text_1">FILMS</string>
+    <string name="tab_text_2">FAVOURITES</string>
+    <string name="title">Title</string>
+    <string name="vote_average">Vote average</string>
+    <string name="overview">Overview</string>
+    <string name="like">LIKE</string>
+    <string name="share">SHARE</string>
+</resources>
