@@ -46,7 +46,5 @@ class SplashActivity : AppCompatActivity() {
 
             override fun onAnimationRepeat(animation: Animation?) { }
         })
-
-//        splashBinding.tvAppName.text = "Hello world"
     }
 }

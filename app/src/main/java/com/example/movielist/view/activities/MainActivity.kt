@@ -1,63 +1,46 @@
 package com.example.movielist.view.activities
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.movielist.utils.Constants.API_KEY_VALUE
-import com.example.movielist.utils.Constants.LOG_TAG
 import com.example.movielist.R
-import com.example.movielist.model.network.RetrofitServices
-import com.example.movielist.view.adapter.MyMovieAdapter
-import com.example.movielist.model.network.Common
-import com.example.movielist.model.entities.Movie
-import com.example.movielist.model.entities.TheatreMovies
-import dmax.dialog.SpotsDialog
-import kotlinx.android.synthetic.main.activity_main.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.movielist.databinding.ActivityMainBinding
+import com.example.movielist.utils.Constants.LOG_TAG
 
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var mService: RetrofitServices
     lateinit var mLinearLayoutManager: LinearLayoutManager
-    lateinit var mMyMovieAdapter: MyMovieAdapter
-    lateinit var mAlertDialog: AlertDialog
+    private lateinit var mBinding: ActivityMainBinding
+    private lateinit var mNavController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        try {
+            Log.d(LOG_TAG, "onCreate")
+            mBinding = ActivityMainBinding.inflate(layoutInflater)
+            setContentView(mBinding.root)
 
-        Log.d(LOG_TAG, "onCreate")
+            mNavController = findNavController(R.id.nav_host_fragment)
 
-        mService = Common.retrofitServices!!
-        recyclerMovieList.setHasFixedSize(true)
-        mLinearLayoutManager = LinearLayoutManager(this)
-        recyclerMovieList.layoutManager = mLinearLayoutManager
-        mAlertDialog = SpotsDialog.Builder().setCancelable(true).setContext(this).build()
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.navigation_movie,
+                    R.id.navigation_favorite_movie
+                )
+            )
 
-        getAllMovieList()
-    }
+            setupActionBarWithNavController(mNavController, appBarConfiguration)
 
-    private fun getAllMovieList() {
-        mAlertDialog.show()
-        Log.d(LOG_TAG, "getAllMovieList")
-
-        mService.getMovieList(API_KEY_VALUE).enqueue(object : Callback<TheatreMovies> {
-            override fun onResponse(call: Call<TheatreMovies>, response: Response<TheatreMovies>) {
-                Log.i(LOG_TAG, "Response: $response")
-                mMyMovieAdapter = MyMovieAdapter(baseContext, response.body()?.results as MutableList<Movie>)
-                mMyMovieAdapter.notifyDataSetChanged()
-                recyclerMovieList.adapter = mMyMovieAdapter
-                mAlertDialog.dismiss()
-            }
-
-            override fun onFailure(call: Call<TheatreMovies>, t: Throwable) {
-                Log.e(LOG_TAG, "Throwable: $t")
-            }
-        })
+            mBinding.navView.setupWithNavController(mNavController)
+        } catch (e : Exception) {
+            Log.e(LOG_TAG, "Exception: $e")
+        }
     }
 }

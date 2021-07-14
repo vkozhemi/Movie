@@ -14,6 +14,9 @@ class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
 
     val allMovieList: LiveData<List<Movie>> = repository.allMovieList.asLiveData()
 
+    fun update(movie: Movie) = viewModelScope.launch {
+        repository.updateMovie(movie)
+    }
     val favoriteMovie: LiveData<List<Movie>> = repository.favoriteMovieList.asLiveData()
 }
 
